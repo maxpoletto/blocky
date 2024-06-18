@@ -19,28 +19,36 @@
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+
         #examples th {
             background-color: cornflowerblue;
         }
-        #examples th, td {
+
+        #examples th,
+        td {
             border-style: solid none solid;
             border-color: darkgrey;
             padding: 4px 16px 4px;
         }
 
-        button, input {
+        button,
+        input {
             font-size: 1em;
+            margin-top: 5px;
         }
+
         #options-form {
-            margin-top: 20px;
+            margin-top: 10px;
         }
+
         .rule {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
+
         .error {
             color: red;
         }
-</style>
+    </style>
 </head>
 
 <body>
@@ -95,6 +103,10 @@
         <button type="button" id="add-rule-button">Add Rule</button>
         <button type="submit">Save</button>
     </form>
+    <hr />
+    <button type="button" id="export-button">Export Rules</button>
+    <input type="file" id="import-file" style="display:none;">
+    <button type="button" id="import-button">Import Rules</button>
     <script src="options.js"></script>
 </body>
 
