@@ -1,0 +1,13 @@
+The "Blocky" Chrome extension does not collect any user data nor share it with anyone, and it never will.
+I wrote it because I couldn't find an extension that had the features I wanted and that didn't grant
+itself more permissions than necessary.
+
+Blocky:
+- stores your block configuration (what sites to block and at what times) in your Chrome's local storage;
+- uses Chrome's "declarativeNetRequest" API to tell Chrome what patterns should be blocked;
+- does not itself have access to the URLs that you browse;
+- does not talk to any external sites or services.
+
+It will stay that way.
+
+
