@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     chrome.storage.sync.get(["rules"], function (result) {
         const rules = result.rules || [];
-        rules.forEach(rule => addRule(rule.pattern, rule.timeRangeStart, rule.timeRangeEnd));
+        rules.forEach(rule => addRule(rule.pattern, rule.timeStart, rule.timeEnd));
     });
 
     addRuleButton.addEventListener("click", function () {
@@ -43,11 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const reader = new FileReader();
         reader.onload = function (e) {
             try {
+                // TODO: better check for corrupted data (not critical).
                 const importedRules = JSON.parse(e.target.result);
                 if (Array.isArray(importedRules)) {
                     chrome.storage.sync.set({ rules: importedRules }, function () {
                         rulesContainer.innerHTML = "";
-                        importedRules.forEach(rule => addRule(rule.pattern, rule.timeRangeStart, rule.timeRangeEnd));
+                        importedRules.forEach(rule => addRule(rule.pattern, rule.timeStart, rule.timeEnd));
                         chrome.runtime.sendMessage({ updateRules: true });
                     });
                 } else {
@@ -67,12 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         ruleElements.forEach(ruleElement => {
             const pattern = ruleElement.querySelector(".pattern").value.trim();
-            const timeRangeStart = ruleElement.querySelector(".time-range-start").value.trim();
-            const timeRangeEnd = ruleElement.querySelector(".time-range-end").value.trim();
+            const timeStart = ruleElement.querySelector(".time-start").value.trim();
+            const timeEnd = ruleElement.querySelector(".time-end").value.trim();
             const errorElement = ruleElement.querySelector(".error");
 
-            const parsedStart = parseTime(timeRangeStart);
-            const parsedEnd = parseTime(timeRangeEnd);
+            const parsedStart = parseTime(timeStart);
+            const parsedEnd = parseTime(timeEnd);
 
             if (pattern.length == 0) return;
             if (parsedStart === null || parsedEnd === null
@@ -84,8 +85,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 errorElement.textContent = "";
                 rules.push({
                     pattern: pattern,
-                    timeRangeStart: parsedStart,
-                    timeRangeEnd: parsedEnd
+                    timeStart: parsedStart,
+                    timeEnd: parsedEnd
                 });
             }
         });
@@ -98,13 +99,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function addRule(pattern, timeRangeStart, timeRangeEnd) {
+    function addRule(pattern, timeStart, timeEnd) {
         const ruleDiv = document.createElement("div");
         ruleDiv.className = "rule";
         ruleDiv.innerHTML = `
         <input type="text" class="pattern" placeholder="URL pattern" value="${pattern}">
-        <input type="text" class="time-range-start" placeholder="Start time (HH:MM)" value="${unparseTime(timeRangeStart)}">
-        <input type="text" class="time-range-end" placeholder="End time (HH:MM)" value="${unparseTime(timeRangeEnd)}">
+        <input type="text" class="time-start" placeholder="Start time (HH:MM)" value="${unparseTime(timeStart)}">
+        <input type="text" class="time-end" placeholder="End time (HH:MM)" value="${unparseTime(timeEnd)}">
         <button type="button" class="remove-rule-button">Remove</button>
         <span class="error"></span>
       `;
@@ -114,9 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
         rulesContainer.appendChild(ruleDiv);
     }
 
-    function parseTime(timeStr) {
-        if (timeStr.length == 0) return undefined;
-        const parts = timeStr.split(":");
+    function parseTime(ts) {
+        if (ts.length == 0) return undefined;
+        const parts = ts.split(":");
         if (parts.length !== 2) return null;
         const hours = parseInt(parts[0], 10);
         const minutes = parseInt(parts[1], 10);

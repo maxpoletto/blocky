@@ -22,19 +22,18 @@ async function updateRulesPeriodically() {
 }
 setInterval(updateRulesPeriodically, CHECK_INTERVAL);
 
-const DEBUG = true;
 async function updateDynamicRules() {
+    console.log('updating rules');
     const result = await chrome.storage.sync.get(["rules"]);
     const rules = result.rules || [];
-    if (DEBUG) console.log("Current rules:", rules);
 
     const dynamicRules = [];
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
 
     rules.forEach((rule, index) => {
-        if (rule.timeRangeStart !== undefined && rule.timeRangeEnd !== undefined) {
-            if (rule.timeRangeStart <= currentTime && currentTime <= rule.timeRangeEnd) {
+        if (rule.timeStart !== undefined && rule.timeEnd !== undefined) {
+            if (rule.timeStart <= currentTime && currentTime <= rule.timeEnd) {
                 dynamicRules.push({
                     "id": index + 1,
                     "priority": 1,
@@ -53,10 +52,8 @@ async function updateDynamicRules() {
     });
 
     const existingIds = (await chrome.declarativeNetRequest.getDynamicRules()).map(r => r.id);
-    console.log("Dynamic rules to set:", dynamicRules.map(r => `(${r.id}, ${r.condition.urlFilter})`));
-
     await chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: existingIds,
         addRules: dynamicRules
-    }).then(() => { if (DEBUG) console.log("success"); }, (msg) => { console.error(msg); });
+    }).then(() => {}, (msg) => { console.error(msg); });
 }
