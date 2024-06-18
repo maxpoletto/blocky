@@ -11,14 +11,6 @@
             width: 80%;
         }
 
-        .rule {
-            margin-bottom: 10px;
-        }
-
-        #options-form {
-            margin-top: 20px;
-        }
-
         #examples {
             display: table;
             text-align: left;
@@ -27,20 +19,28 @@
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-
         #examples th {
             background-color: cornflowerblue;
+        }
+        #examples th, td {
             border-style: solid none solid;
             border-color: darkgrey;
             padding: 4px 16px 4px;
         }
 
-        #examples td {
-            border-style: solid none solid;
-            border-color: darkgrey;
-            padding: 4px 16px 4px;
+        button, input {
+            font-size: 1em;
         }
-    </style>
+        #options-form {
+            margin-top: 20px;
+        }
+        .rule {
+            margin-bottom: 10px;
+        }
+        .error {
+            color: red;
+        }
+</style>
 </head>
 
 <body>
@@ -86,8 +86,8 @@
     </table>
     <p>
         You can also specify a time range when a rule should apply. (For example, to block
-        social network sites during the workday.) Time ranges are of the form "hh:mm - hh:mm" in 24-hour format (e.g.,
-        "8:30-17:00"), and are interpreted to be in your local timezone.
+        social network sites during the workday.) Times are in 24-hour format (e.g., "17:30") and are interpreted to be
+        in your local timezone.
     </p>
     <hr />
     <form id="options-form">
