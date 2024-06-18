@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const exportButton = document.getElementById("export-button");
     const importButton = document.getElementById("import-button");
     const importFile = document.getElementById("import-file");
+    const successMessage = document.getElementById("success-message");
 
     chrome.storage.sync.get(["rules"], function (result) {
         const rules = result.rules || [];
@@ -75,7 +76,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const parsedStart = parseTime(timeStart);
             const parsedEnd = parseTime(timeEnd);
 
-            if (pattern.length == 0) return;
+            if (pattern.length == 0) {
+                ruleElement.remove();
+                return;
+            }
             if (parsedStart === null || parsedEnd === null
                 || typeof parsedStart == 'undefined' && typeof parsedEnd != 'undefined'
                 || typeof parsedStart != 'undefined' && typeof parsedEnd == 'undefined') {
@@ -94,9 +98,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (valid) {
             chrome.storage.sync.set({ rules }, function () {
                 chrome.runtime.sendMessage({ updateRules: true });
-                alert("Rules saved!");
+                showSuccessMessage();
             });
         }
+    }
+
+    function showSuccessMessage() {
+        successMessage.style.opacity = 1;
+        setTimeout(() => {
+            successMessage.style.opacity = 0;
+        }, 2000);
     }
 
     function addRule(pattern, timeStart, timeEnd) {

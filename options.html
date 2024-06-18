@@ -48,6 +48,12 @@
         .error {
             color: red;
         }
+
+        .success {
+            color: green;
+            opacity: 0;
+            transition: opacity 1s;
+        }
     </style>
 </head>
 
@@ -102,6 +108,7 @@
         <div id="rules-container"></div>
         <button type="button" id="add-rule-button">Add Rule</button>
         <button type="submit">Save</button>
+        <span id="success-message" class="success">Rules saved!</span>
     </form>
     <hr />
     <button type="button" id="export-button">Export Rules</button>
