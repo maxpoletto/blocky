@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Blocky Configuration</title>
+    <style>
+        body {
+            font-family: "Google Sans", Calibri, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            width: 80%;
+        }
+
+        .rule {
+            margin-bottom: 10px;
+        }
+
+        #options-form {
+            margin-top: 20px;
+        }
+
+        #examples {
+            display: table;
+            text-align: left;
+            border-style: solid;
+            border-color: darkgrey;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #examples th {
+            background-color: cornflowerblue;
+            border-style: solid none solid;
+            border-color: darkgrey;
+            padding: 4px 16px 4px;
+        }
+
+        #examples td {
+            border-style: solid none solid;
+            border-color: darkgrey;
+            padding: 4px 16px 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blocky Configuration</h1>
+    <p>Configure one or more rules to block entire domains or specific URLs.
+        Rules can include patterns. See the examples below or the pattern
+        language specification <a
+            href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/RuleCondition#urlfilter">here</a>.
+    </p>
+    <table id="examples">
+        <tbody>
+            <tr>
+                <th><code translate="no" dir="ltr"><b>Expression</b></code></th>
+                <th>Matches</th>
+                <th>Does not match</th>
+            </tr>
+            <tr>
+                <td><code translate="no" dir="ltr">"abc"</code></td>
+                <td>https://abcd.com<br>https://example.com/abcd</td>
+                <td>https://ab.com</td>
+            </tr>
+            <tr>
+                <td><code translate="no" dir="ltr">"abc*d"</code></td>
+                <td>https://abcd.com<br>https://example.com/abcxyzd</td>
+                <td>https://abc.com</td>
+            </tr>
+            <tr>
+                <td><code translate="no" dir="ltr">"||a.example.com"</code></td>
+                <td>https://a.example.com/<br>https://b.a.example.com/xyz</td>
+                <td>https://example.com/</td>
+            </tr>
+            <tr>
+                <td><code translate="no" dir="ltr">"|https*"</code></td>
+                <td>https://example.com</td>
+                <td>http://example.com/<br>http://https.com</td>
+            </tr>
+            <tr>
+                <td><code translate="no" dir="ltr">"example*^123|"</code></td>
+                <td>https://example.com/123<br>http://abc.com/example?123</td>
+                <td>https://example.com/1234<br>https://abc.com/example0123</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        You can also specify a time range when a rule should apply. (For example, to block
+        social network sites during the workday.) Time ranges are of the form "hh:mm - hh:mm" in 24-hour format (e.g.,
+        "8:30-17:00"), and are interpreted to be in your local timezone.
+    </p>
+    <hr />
+    <form id="options-form">
+        <div id="rules-container"></div>
+        <button type="button" id="add-rule-button">Add Rule</button>
+        <button type="submit">Save</button>
+    </form>
+    <script src="options.js"></script>
+</body>
+
+</html>
