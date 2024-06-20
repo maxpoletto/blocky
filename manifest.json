@@ -5,7 +5,8 @@
     "description": "Blocks URLs based on configurable regex patterns and time ranges.",
     "permissions": [
       "storage",
-      "declarativeNetRequest"
+      "declarativeNetRequest",
+      "alarms"
     ],
     "background": {
       "service_worker": "background.js"

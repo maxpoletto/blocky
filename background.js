@@ -1,8 +1,8 @@
 let queue = Promise.resolve(); // Use a queue as a synchronization mechanism.
-const CHECK_INTERVAL = 60 * 1000; // Check rules every minute.
 
 chrome.runtime.onInstalled.addListener(() => {
     queue = queue.then(() => updateDynamicRules());
+    chrome.alarms.create('updateRulesPeriodically', { periodInMinutes: 1 });
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -17,13 +17,14 @@ chrome.storage.onChanged.addListener((changes) => {
     }
 });
 
-async function updateRulesPeriodically() {
-    queue = queue.then(() => updateDynamicRules());
-}
-setInterval(updateRulesPeriodically, CHECK_INTERVAL);
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'updateRulesPeriodically') {
+      queue = queue.then(() => updateDynamicRules());
+    }
+  });
 
 async function updateDynamicRules() {
-    console.log('updating rules');
+    console.log('updating blocky rules');
     const result = await chrome.storage.sync.get(["rules"]);
     const rules = result.rules || [];
 
