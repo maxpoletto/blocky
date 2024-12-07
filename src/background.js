@@ -1,31 +1,35 @@
+const isFirefox = typeof browser !== "undefined";
+if (!isFirefox) {
+    var browser = chrome;
+}
+
 let queue = Promise.resolve(); // Use a queue as a synchronization mechanism.
 
-chrome.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(() => {
     queue = queue.then(() => updateDynamicRules());
-    chrome.alarms.create('updateRulesPeriodically', { periodInMinutes: 1 });
+    browser.alarms.create('updateRulesPeriodically', { periodInMinutes: 1 });
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.updateRules) {
         queue = queue.then(() => updateDynamicRules());
     }
 });
 
-chrome.storage.onChanged.addListener((changes) => {
+browser.storage.onChanged.addListener((changes) => {
     if (changes.rules) {
         queue = queue.then(() => updateDynamicRules());
     }
 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'updateRulesPeriodically') {
       queue = queue.then(() => updateDynamicRules());
     }
   });
 
 async function updateDynamicRules() {
-    console.log('updating blocky rules');
-    const result = await chrome.storage.sync.get(["rules"]);
+    const result = await browser.storage.sync.get(["rules"]);
     const rules = result.rules || [];
 
     const dynamicRules = [];
@@ -38,7 +42,7 @@ async function updateDynamicRules() {
                 dynamicRules.push({
                     "id": index + 1,
                     "priority": 1,
-                    "action": { "type": "redirect", "redirect": { "url": chrome.runtime.getURL("blocked.html") } },
+                    "action": { "type": "redirect", "redirect": { "url": browser.runtime.getURL("blocked.html") } },
                     "condition": { "urlFilter": rule.pattern, "resourceTypes": ["main_frame"] }
                 });
             }
@@ -46,15 +50,18 @@ async function updateDynamicRules() {
             dynamicRules.push({
                 "id": index + 1,
                 "priority": 1,
-                "action": { "type": "redirect", "redirect": { "url": chrome.runtime.getURL("blocked.html") } },
+                "action": { "type": "redirect", "redirect": { "url": browser.runtime.getURL("blocked.html") } },
                 "condition": { "urlFilter": rule.pattern, "resourceTypes": ["main_frame"] }
             });
         }
     });
 
-    const existingIds = (await chrome.declarativeNetRequest.getDynamicRules()).map(r => r.id);
-    await chrome.declarativeNetRequest.updateDynamicRules({
-        removeRuleIds: existingIds,
-        addRules: dynamicRules
-    }).then(() => {}, (msg) => { console.error(msg); });
+    if (isFirefox) {
+    } else { // Chrome
+        const existingIds = (await browser.declarativeNetRequest.getDynamicRules()).map(r => r.id);
+        await browser.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: existingIds,
+            addRules: dynamicRules
+        }).then(() => {}, (msg) => { console.error(msg); });
+    }
 }
