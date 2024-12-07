@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Blocky URL Blocker",
+  "version": "1.1",
+  "description": "Blocks URLs based on configurable regex patterns and time ranges.",
+  "permissions": [
+    "storage",
+    "declarativeNetRequest",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "options_page": "options.html",
+  "icons": {
+    "48": "stop.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "blocky@maxp.net",
+      "strict_min_version": "91.0"
+    }
+  }
+}
