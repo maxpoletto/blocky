@@ -5,11 +5,11 @@
   "description": "Blocks URLs based on configurable regex patterns and time ranges.",
   "permissions": [
     "storage",
-    "declarativeNetRequest",
-    "alarms"
+    "alarms",
+    "declarativeNetRequest"
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
   "host_permissions": [
     "<all_urls>"
@@ -18,19 +18,22 @@
   "icons": {
     "48": "stop.png"
   },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ruleset_1",
-        "enabled": true,
-        "path": "rules.json"
-      }
-    ]
-  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "blocked.html",
+        "lama2.png"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "blocky@maxp.net",
-      "strict_min_version": "91.0"
+      "strict_min_version": "133.0"
     }
   }
 }

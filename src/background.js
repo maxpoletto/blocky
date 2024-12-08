@@ -42,7 +42,7 @@ async function updateDynamicRules() {
                 dynamicRules.push({
                     "id": index + 1,
                     "priority": 1,
-                    "action": { "type": "redirect", "redirect": { "url": browser.runtime.getURL("blocked.html") } },
+                    "action": { "type": "redirect", "redirect": { "extensionPath": "/blocked.html" } },
                     "condition": { "urlFilter": rule.pattern, "resourceTypes": ["main_frame"] }
                 });
             }
@@ -50,18 +50,15 @@ async function updateDynamicRules() {
             dynamicRules.push({
                 "id": index + 1,
                 "priority": 1,
-                "action": { "type": "redirect", "redirect": { "url": browser.runtime.getURL("blocked.html") } },
+                "action": { "type": "redirect", "redirect": { "extensionPath": "/blocked.html" } },
                 "condition": { "urlFilter": rule.pattern, "resourceTypes": ["main_frame"] }
             });
         }
     });
 
-    if (isFirefox) {
-    } else { // Chrome
-        const existingIds = (await browser.declarativeNetRequest.getDynamicRules()).map(r => r.id);
-        await browser.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds: existingIds,
-            addRules: dynamicRules
-        }).then(() => {}, (msg) => { console.error(msg); });
-    }
+    const existingIds = (await browser.declarativeNetRequest.getDynamicRules()).map(r => r.id);
+    await browser.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: existingIds,
+        addRules: dynamicRules
+    }).then(() => {}, (msg) => { console.error(msg); });
 }
