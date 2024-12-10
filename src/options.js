@@ -113,16 +113,42 @@ document.addEventListener("DOMContentLoaded", function () {
     function addRule(pattern, timeStart, timeEnd) {
         const ruleDiv = document.createElement("div");
         ruleDiv.className = "rule";
-        ruleDiv.innerHTML = `
-        <input type="text" class="pattern" placeholder="URL pattern" value="${pattern}">
-        <input type="text" class="time-start" placeholder="Start time (HH:MM)" value="${unparseTime(timeStart)}">
-        <input type="text" class="time-end" placeholder="End time (HH:MM)" value="${unparseTime(timeEnd)}">
-        <button type="button" class="remove-rule-button">Remove</button>
-        <span class="error"></span>
-      `;
-        ruleDiv.querySelector(".remove-rule-button").addEventListener("click", function () {
+
+        const patternInput = document.createElement("input");
+        patternInput.type = "text";
+        patternInput.className = "pattern";
+        patternInput.placeholder = "URL pattern";
+        patternInput.value = pattern;
+
+        const timeStartInput = document.createElement("input");
+        timeStartInput.type = "text";
+        timeStartInput.className = "time-start";
+        timeStartInput.placeholder = "Start time (HH:MM)";
+        timeStartInput.value = unparseTime(timeStart);
+
+        const timeEndInput = document.createElement("input");
+        timeEndInput.type = "text";
+        timeEndInput.className = "time-end";
+        timeEndInput.placeholder = "End time (HH:MM)";
+        timeEndInput.value = unparseTime(timeEnd);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "remove-rule-button";
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", function () {
             ruleDiv.remove();
         });
+
+        const errorSpan = document.createElement("span");
+        errorSpan.className = "error";
+
+        ruleDiv.appendChild(patternInput);
+        ruleDiv.appendChild(timeStartInput);
+        ruleDiv.appendChild(timeEndInput);
+        ruleDiv.appendChild(removeButton);
+        ruleDiv.appendChild(errorSpan);
+
         rulesContainer.appendChild(ruleDiv);
     }
 
