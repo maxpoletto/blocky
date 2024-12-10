@@ -1,1 +1,3 @@
-_metadata/
+_metadata
+dist
+.vscode
