@@ -7,7 +7,7 @@ let queue = Promise.resolve(); // Use a queue as a synchronization mechanism.
 
 browser.runtime.onInstalled.addListener(() => {
     queue = queue.then(() => updateDynamicRules());
-    browser.alarms.create('updateRulesPeriodically', { periodInMinutes: 1 });
+    browser.alarms.create('updateRulesPeriodically', { delayInMinutes: 1, periodInMinutes: 1 });
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
