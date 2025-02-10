@@ -2,14 +2,14 @@ all: chrome firefox
 
 FILES=src/*.html src/*.js src/*.json src/lama2.png src/stop.png
 
-chrome:
+chrome: $(FILES)
 	mkdir -p dist/chrome ; \
 	rm -f dist/chrome/* ; \
 	cp $(FILES) dist/chrome ; \
 	cp manifests/manifest.chrome.json dist/chrome/manifest.json ; \
-	zip -r dist/chrome.zip dist/chrome
+	cd dist/chrome && zip -r ../chrome.zip .
 
-firefox:
+firefox: $(FILES)
 	mkdir -p dist/firefox ; \
 	rm -f dist/firefox/* ; \
 	cp $(FILES) dist/firefox ; \
@@ -18,3 +18,5 @@ firefox:
 
 clean:
 	rm -rf dist
+
+.PHONY: all chrome firefox clean
