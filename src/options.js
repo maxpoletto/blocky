@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     chrome.storage.sync.set({ rules: importedRules }, function () {
                         rulesContainer.innerHTML = "";
                         importedRules.forEach(rule => addRule(rule.pattern, rule.timeStart, rule.timeEnd));
-                        chrome.runtime.sendMessage({ updateRules: true });
                     });
                 } else {
                     alert("Invalid rules format.");
@@ -97,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (valid) {
             chrome.storage.sync.set({ rules }, function () {
-                chrome.runtime.sendMessage({ updateRules: true });
                 showSuccessMessage();
             });
         }
